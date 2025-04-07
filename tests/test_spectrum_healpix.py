@@ -56,5 +56,5 @@ def test_power_spectrum_frequency_between_zero_and_one(spectrum):
 
 def test_power_spectrum_wavenumbers(spectrum):
     # note that positive wave number is eastward in WK99
-    assert np.all(spectrum.wavenumber.values == np.arange(-64, 64))
+    assert np.all(spectrum.wavenumber.values == np.arange(-63, 65))
 
