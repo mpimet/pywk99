@@ -16,6 +16,7 @@ dependencies:
   - ipykernel
   - pip
   - dask
+  - healpy
   - pip:
     - -e .
 

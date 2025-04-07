@@ -13,6 +13,7 @@ from pywk99.timeseries.timeseries import check_time_index_has_expected_frequency
 from pywk99.timeseries.timeseries import check_variable_coordinates_are_sorted
 from pywk99.timeseries.timeseries import taper_variable_time_ends
 from pywk99.timeseries.timeseries import remove_linear_trend
+from pywk99.grid import convert_to_equatorial_latlon_grid
 
 _VALID_SEASONS = ["DJF", "MAM", "JJA", "SON"]
 
@@ -25,7 +26,9 @@ def get_spectrum(spc_quantity: str,
                  overlap_length: Optional[str] = None,
                  season: Optional[str] = None,
                  min_periods_season: Optional[int] = None,
-                 taper_alpha: Optional[float] = None) -> xr.DataArray:
+                 taper_alpha: Optional[float] = None,
+                 grid_type: str = None,
+                 grid_dict: Optional[dict] = None) -> xr.DataArray:
     """
     Get a Wheeler and Kiladis 1999 power, amplitude or cross spectrum.
 
@@ -59,6 +62,12 @@ def get_spectrum(spc_quantity: str,
         default it is set to int(0.25*overlap_length/data_frequency).
     taper_alpha: float, optional
         Alpha value determining the shape of the Tukey window filter function.
+    grid_type: str, optional, default "latlon"
+        The type of grid of the dataarray. Either "latlon" or "healpix". If
+        "healpix" then a grid_dict must be also provided.
+    grid_dict: dict, optional
+        A dictionary with grid metadata. Used when grid_type = "healpix". The
+        dictionary must have keys for "nside", "nested" and "minmax_lat".
 
     Returns
     -------
@@ -76,9 +85,12 @@ def get_spectrum(spc_quantity: str,
         If the season is not recognized.
     """
     # process inputs
-    check_variable_coordinates_are_sorted(variable)
     check_for_one_max_two_variables(variable)
     variable = convert_to_dataset(variable)
+    variable = convert_to_equatorial_latlon_grid(variable,
+                                                 grid_type,
+                                                 grid_dict)
+    check_variable_coordinates_are_sorted(variable)
     window_length_np = pd.Timedelta(window_length).to_numpy()
     overlap_length_np = pd.Timedelta(overlap_length).to_numpy()
     data_frequency_np = _get_data_frequency(variable, data_frequency)
