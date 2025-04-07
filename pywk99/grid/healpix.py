@@ -7,18 +7,18 @@ import healpy as hp
 from scipy import interpolate
 
 
-def healpix_to_equatorial_latlon(
+def dataset_healpix_to_equatorial_latlon(
     dataset: xr.Dataset, **grid_dict
 ) -> xr.Dataset:
     """
-    Extract a latlon dataarray from a healpix dataarray.
+    Extract a latlon dataarray from a healpix dataset.
 
     The latlon array extracted is for a band around the equator.
     """
     latlon_datarrays = []
     for variable_name in dataset.data_vars:
         dataarray = dataset[variable_name]
-        latlon_datarray_aux = _dataarray_healpix_to_equatorial_latlon(
+        latlon_datarray_aux = dataarray_healpix_to_equatorial_latlon(
             dataarray, **grid_dict
         )
         latlon_datarray_aux.name = variable_name
@@ -26,9 +26,14 @@ def healpix_to_equatorial_latlon(
     return xr.merge(latlon_datarrays)
 
 
-def _dataarray_healpix_to_equatorial_latlon(
+def dataarray_healpix_to_equatorial_latlon(
     healpix_dataarray: xr.DataArray, **grid_dict
 ) -> xr.DataArray:
+    """
+    Extract a latlon dataarray from a healpix dataset.
+
+    The latlon array extracted is for a band around the equator.
+    """
     # unpack dict
     nside = grid_dict["nside"]
     nest = grid_dict["nest"]

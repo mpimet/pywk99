@@ -13,7 +13,7 @@ from pywk99.timeseries.timeseries import check_time_index_has_expected_frequency
 from pywk99.timeseries.timeseries import check_variable_coordinates_are_sorted
 from pywk99.timeseries.timeseries import taper_variable_time_ends
 from pywk99.timeseries.timeseries import remove_linear_trend
-from pywk99.grid import convert_to_equatorial_latlon_grid
+from pywk99.grid import dataset_to_equatorial_latlon_grid
 
 _VALID_SEASONS = ["DJF", "MAM", "JJA", "SON"]
 
@@ -87,7 +87,7 @@ def get_spectrum(spc_quantity: str,
     # process inputs
     check_for_one_max_two_variables(variable)
     variable = convert_to_dataset(variable)
-    variable = convert_to_equatorial_latlon_grid(variable,
+    variable = dataset_to_equatorial_latlon_grid(variable,
                                                  grid_type,
                                                  grid_dict)
     check_variable_coordinates_are_sorted(variable)

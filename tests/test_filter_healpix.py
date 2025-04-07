@@ -3,7 +3,7 @@ import pytest
 
 import numpy as np
 import xarray as xr
-import healpix as hp
+import healpy as hp
 
 from pywk99.filter.filter import filter_variable
 from pywk99.filter.window import get_box_filter_window

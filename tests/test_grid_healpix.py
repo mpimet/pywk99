@@ -7,7 +7,7 @@ import xarray as xr
 import numpy as np
 import pandas as pd
 
-from pywk99.grid.healpix import healpix_to_equatorial_latlon
+from pywk99.grid.healpix import dataset_healpix_to_equatorial_latlon
 
 
 @pytest.fixture
@@ -45,7 +45,7 @@ def variable():
 @pytest.fixture
 def latlon_variable(variable):
     grid_dict = dict(nside=32, nest=True, minmax_lat=20)
-    latlon_variable = healpix_to_equatorial_latlon(
+    latlon_variable = dataset_healpix_to_equatorial_latlon(
         variable, **grid_dict
     )
     return latlon_variable
