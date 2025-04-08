@@ -22,9 +22,10 @@ jobs:
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
-    - name: Install dependencies
+    - name: Install mamba and dependencies
       run: |
-        conda env update --file environment.yml --name base
+        conda install mamba -n base -c conda-forge
+        mamba env update --file environment.yml --name base
     - name: Lint with flake8
       run: |
         conda install flake8
