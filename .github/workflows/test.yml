@@ -21,7 +21,7 @@ jobs:
     - uses: mamba-org/setup-micromamba@v2
       with:
         environment-file: environment.yml
-    - name: Activate environment
-      run: source ~/.bashrc && micromamba activate pywk99        
+        generate-run-shell: true   
     - name: Test with pytest
       run: pytest
+      shell: micromamba-shell {0}
