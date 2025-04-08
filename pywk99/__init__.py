@@ -3,6 +3,9 @@ Wavenumber-frequency analysis in Python.
 
 Changelog
 ---------
+Apr 8, 2025: Version 0.4.3
+    - Adding support for healpix
+
 Mar 7, 2025: Version 0.4.2
     - Organizing first github public version.
 
