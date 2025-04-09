@@ -6,6 +6,7 @@ Untitled*
 
 # python
 *.pyc
+*build
 
 # vscode
 .vscode
@@ -23,3 +24,4 @@ Untitled*
 
 # Mac OS
 .DS_store
+
