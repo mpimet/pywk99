@@ -9,11 +9,12 @@ authors = [
 ]
 dependencies = [
     "numpy",
+    "pandas",
     "xarray",
     "netcdf4",
     "matplotlib",
     "shapely",
-    "cartopy",
+    "healpy"
 ]
 description = "Wheeler and Kiladis Wavenumber-Frequency Analysis in Python"
 requires-python = ">=3.10"
