@@ -43,7 +43,7 @@ def dataarray_healpix_to_equatorial_latlon(
     # get data
     data = healpix_dataarray.values
     time = healpix_dataarray.time.values
-    lat, lon = _get_pix_lalot(nside, nest)
+    lat, lon = _get_pix_latlot(nside, nest)
 
     # get latitudes
     unique_lats = np.unique(np.round(lat, 10))
@@ -93,7 +93,7 @@ def _interp_array_along_first_axis(x, xp, fp, period):
     return interp_func(x)
 
 
-def _get_pix_lalot(nside, nest):
+def _get_pix_latlot(nside, nest):
     if nest is False:
         raise NotImplementedError("nest=False is not implemented.")
     npix = hp.nside2npix(nside)
