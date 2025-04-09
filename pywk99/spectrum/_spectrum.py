@@ -22,11 +22,11 @@ def get_spectrum(spc_quantity: str,
                  variable: Union[xr.DataArray, xr.Dataset],
                  component_type: str,
                  data_frequency: Optional[str] = None,
-                 window_length: Optional[str] = None,
-                 overlap_length: Optional[str] = None,
+                 window_length: Optional[str] = "96D",
+                 overlap_length: Optional[str] = "60D",
                  season: Optional[str] = None,
                  min_periods_season: Optional[int] = None,
-                 taper_alpha: Optional[float] = None,
+                 taper_alpha: Optional[float] = 0.5,
                  grid_type: str = None,
                  grid_dict: Optional[dict] = None) -> xr.DataArray:
     """
@@ -62,6 +62,7 @@ def get_spectrum(spc_quantity: str,
         default it is set to int(0.25*overlap_length/data_frequency).
     taper_alpha: float, optional
         Alpha value determining the shape of the Tukey window filter function.
+        Default value is 0.5.
     grid_type: str, optional, default "latlon"
         The type of grid of the dataarray. Either "latlon" or "healpix". If
         "healpix" then a grid_dict must be also provided.
