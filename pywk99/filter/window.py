@@ -9,10 +9,11 @@ from pywk99.waves import LinearWave
 
 DISPERSION_CURVE_POINTS = 100
 
+
 class FilterPoint(Point):
     """See shapely.geometry.Point."""
 
-@dataclass(frozen=True)
+
 class FilterWindow:
     name: str
     polygon: Union[Polygon, MultiPolygon]
