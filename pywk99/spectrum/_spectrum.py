@@ -27,7 +27,7 @@ def get_spectrum(spc_quantity: str,
                  season: Optional[str] = None,
                  min_periods_season: Optional[int] = None,
                  taper_alpha: Optional[float] = 0.5,
-                 grid_type: str = None,
+                 grid_type: str = "latlon",
                  grid_dict: Optional[dict] = None) -> xr.DataArray:
     """
     Get a Wheeler and Kiladis 1999 power, amplitude or cross spectrum.
@@ -85,6 +85,34 @@ def get_spectrum(spc_quantity: str,
         If variable coordinates are not sorted.
         If the season is not recognized.
     """
+    one_segment_spectra = get_segments_spectra(spc_quantity,
+                                               variable,
+                                               component_type,
+                                               data_frequency,
+                                               window_length,
+                                               overlap_length,
+                                               season,
+                                               min_periods_season,
+                                               taper_alpha,
+                                               grid_type,
+                                               grid_dict)
+    number = len(one_segment_spectra)
+    wk_spectrum = sum(one_segment_spectra) / number
+    return wk_spectrum
+
+
+def get_segments_spectra(spc_quantity: str,
+                         variable: Union[xr.DataArray, xr.Dataset],
+                         component_type: str,
+                         data_frequency: Optional[str] = None,
+                         window_length: Optional[str] = "96D",
+                         overlap_length: Optional[str] = "60D",
+                         season: Optional[str] = None,
+                         min_periods_season: Optional[int] = None,
+                         taper_alpha: Optional[float] = 0.5,
+                         grid_type: str = "latlon",
+                         grid_dict: Optional[dict] = None
+                         ) -> list[xr.DataArray]:
     # process inputs
     check_for_one_max_two_variables(variable)
     variable = convert_to_dataset(variable)
@@ -104,15 +132,12 @@ def get_spectrum(spc_quantity: str,
         variable_segments = _choose_segments_within_season(
             variable_segments, season, min_periods_season)
     # construct spectra for each segment
-    wk_spectrums = [
+    spectra = [
         _one_segment_spectrum(variable_segment, spc_quantity, component_type,
                               data_frequency_np, taper_alpha)
         for variable_segment in variable_segments
     ]
-    # compute spectra mean
-    number_of_spectrums = len(wk_spectrums)
-    wk_spectrum = (sum(wk_spectrums) / number_of_spectrums)
-    return wk_spectrum
+    return spectra
 
 
 def _get_data_frequency(
