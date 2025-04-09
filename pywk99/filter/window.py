@@ -44,9 +44,17 @@ def get_mjo_window() -> FilterWindow:
     return mjo_window
 
 
-def get_tropical_depression_window() -> FilterWindow:
+def get_tropical_depression_window(definition: str = "kth06") -> FilterWindow:
     """
     Get a window commonly used for isolating tropical depressions.
+
+
+    Parameter
+    ---------
+    definition : str, optional
+        Which defition of the literature to follow. Options are "kth06" or
+        "rf04" following, respectively, Kiladis, Thorncroft, & Hall (2006), and
+        Roundy & Frank (2004)
 
     Returns
     -------
@@ -54,9 +62,14 @@ def get_tropical_depression_window() -> FilterWindow:
         A window to filter in wavenumber-frequency space.
     """
     name = "tropical_depression"
-    polygon = Polygon([(-20.0, 0.3), (-20.0, 0.5), (-6, 0.33), (-6, 0.13)])
-    td_window = FilterWindow(name, polygon)
-    return td_window
+    if definition == "kth06":
+        polygon = Polygon([(-20.0, 0.3), (-20.0, 0.5), (-6, 0.33), (-6, 0.13)])
+        td_window = FilterWindow(name, polygon)
+        return td_window
+    if definition == "rf04":
+        td_window = get_box_filter_window(-20, -6, 0.2, 0.4, name=name)
+        return td_window
+    raise ValueError(f"{definition} is not a valid TD definition.")
 
 
 def get_box_filter_window(k_min: float, k_max: float,
