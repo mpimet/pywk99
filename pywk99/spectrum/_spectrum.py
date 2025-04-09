@@ -103,16 +103,15 @@ def get_spectrum(spc_quantity: str,
     if season is not None:
         variable_segments = _choose_segments_within_season(
             variable_segments, season, min_periods_season)
-    # construct spectrum
+    # construct spectra for each segment
     wk_spectrums = [
         _one_segment_spectrum(variable_segment, spc_quantity, component_type,
                               data_frequency_np, taper_alpha)
         for variable_segment in variable_segments
     ]
+    # compute spectra mean
     number_of_spectrums = len(wk_spectrums)
-    wk_spectrum = (sum(wk_spectrums) / number_of_spectrums).sum("lat")
-    wk_spectrum = wk_spectrum[wk_spectrum.frequency > 0]
-    wk_spectrum = wk_spectrum.sortby(["frequency", "wavenumber"])
+    wk_spectrum = (sum(wk_spectrums) / number_of_spectrums)
     return wk_spectrum
 
 
@@ -138,6 +137,9 @@ def _one_segment_spectrum(variable_segment: xr.Dataset, spc_quantity: str,
     if component_type != 'full':
         new_segment = _get_symmetry_component(new_segment, component_type)
     wk_spectrum = _compute_hayashi_spectrum(new_segment, spc_quantity)
+    wk_spectrum = wk_spectrum[wk_spectrum.frequency > 0]
+    wk_spectrum = wk_spectrum.sortby(["frequency", "wavenumber"])
+    wk_spectrum = wk_spectrum.sum("lat")
     return wk_spectrum
 
 
