@@ -1,14 +1,19 @@
 """Convert healpix data to a latlon grid"""
 
-from typing import Any
 import xarray as xr
 import numpy as np
 import healpy as hp
 from scipy import interpolate
 
 
+MAXIMUM_LAT_RANGE = 25
+
+
 def dataset_healpix_to_equatorial_latlon(
-    dataset: xr.Dataset, **grid_dict
+    dataset: xr.Dataset,
+    nside: int,
+    nest: str,
+    minmax_lat: float
 ) -> xr.Dataset:
     """
     Extract a latlon dataarray from a healpix dataset.
@@ -19,7 +24,7 @@ def dataset_healpix_to_equatorial_latlon(
     for variable_name in dataset.data_vars:
         dataarray = dataset[variable_name]
         latlon_datarray_aux = dataarray_healpix_to_equatorial_latlon(
-            dataarray, **grid_dict
+            dataarray, nside, nest, minmax_lat
         )
         latlon_datarray_aux.name = variable_name
         latlon_datarrays.append(latlon_datarray_aux)
@@ -27,23 +32,24 @@ def dataset_healpix_to_equatorial_latlon(
 
 
 def dataarray_healpix_to_equatorial_latlon(
-    healpix_dataarray: xr.DataArray, **grid_dict
+    healpix_dataarray: xr.DataArray,
+    nside: int,
+    nest: str,
+    minmax_lat: float
 ) -> xr.DataArray:
     """
     Extract a latlon dataarray from a healpix dataset.
 
     The latlon array extracted is for a band around the equator.
     """
-    # unpack dict
-    nside = grid_dict["nside"]
-    nest = grid_dict["nest"]
-    minmax_lat = grid_dict["minmax_lat"]
-    if minmax_lat > 25:
-        raise ValueError("Latitudes outside healpix equatorial zone.")
+    if minmax_lat > MAXIMUM_LAT_RANGE:
+        msg = (f"Selected latitudinal belt (minmax_lat = {minmax_lat}) is too "
+               "wide for a meaningful analysis of equatorial waves.")
+        raise ValueError(msg)
     # get data
     data = healpix_dataarray.values
     time = healpix_dataarray.time.values
-    lat, lon = _get_pix_latlot(nside, nest)
+    lat, lon = _get_pix_latlon(nside, nest)
 
     # get latitudes
     unique_lats = np.unique(np.round(lat, 10))
@@ -93,7 +99,7 @@ def _interp_array_along_first_axis(x, xp, fp, period):
     return interp_func(x)
 
 
-def _get_pix_latlot(nside, nest):
+def _get_pix_latlon(nside, nest):
     if nest is False:
         raise NotImplementedError("nest=False is not implemented.")
     npix = hp.nside2npix(nside)
