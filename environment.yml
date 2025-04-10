@@ -18,4 +18,4 @@ dependencies:
   - shapely
   - xarray
   - pip:
-      - '-e .'
+      - -e .
