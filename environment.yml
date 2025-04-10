@@ -2,21 +2,20 @@ name: pywk99
 channels:
   - conda-forge
 dependencies:
-  - python>=3.9
-  - pytest
-  - numpy
-  - pandas
-  - xarray
-  - netcdf4
-  - shapely
-  - matplotlib
   - cartopy
   - cmocean
-  - ipython
-  - ipykernel
-  - pip
   - dask
   - healpy
+  - ipykernel
+  - ipython
+  - matplotlib
+  - netcdf4
+  - numpy
+  - pandas
+  - pip
+  - pytest
+  - python>=3.9
+  - shapely
+  - xarray
   - pip:
-    - -e .
-
+      - '-e .'
