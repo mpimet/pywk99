@@ -1,6 +1,6 @@
 """Filter for equatorial wave bands following Wheeler and Kiladis 1999."""
 
-from typing import Optional, Union
+from typing import Optional, Union, Tuple
 import xarray as xr
 import numpy as np
 
@@ -114,7 +114,7 @@ def _get_window_mask(
 
 def _window_bbox_wavenumber_and_frequencies(
     spectrum: xr.DataArray, filter_window: FilterWindow
-) -> tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray]:
     """Get the wavenumbers and frequencies of the window bounding box."""
     k_wmin, w_wmin, k_wmax, w_wmax = filter_window.bounds
     if not np.all(np.diff(spectrum.wavenumber.values) > 0):

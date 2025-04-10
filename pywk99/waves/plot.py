@@ -1,5 +1,5 @@
 """Plot dispersion relations as seen in Wheeler and Kiladis, 1999."""
-from typing import Optional
+from typing import Optional, Tuple
 from matplotlib import pyplot as plt
 import numpy as np
 
@@ -30,7 +30,7 @@ def plot_dispersion_relations(
     _set_axis_limits(ax, k_min, k_max, w_min, w_max)
 
 def plot_individual_dispersion_relations(
-        wave_list: list[tuple[str, int]],
+        wave_list: list[Tuple[str, int]],
         ax: Optional[plt.Axes] = None,
         k_min: float = -14,
         k_max: Optional[float] = 14,

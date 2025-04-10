@@ -1,7 +1,7 @@
 """Define filtering windows for various waves following Wheeler and Kiladis."""
 
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Optional, Tuple, Union
 import numpy as np
 from shapely.geometry import Point, Polygon, MultiPolygon
 
@@ -18,7 +18,7 @@ class FilterWindow:
     polygon: Union[Polygon, MultiPolygon]
 
     @property
-    def bounds(self) -> tuple[float, float, float, float]:
+    def bounds(self) -> Tuple[float, float, float, float]:
         return self.polygon.bounds
 
     def union(self, other) -> "FilterWindow":
