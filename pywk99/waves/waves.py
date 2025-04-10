@@ -2,7 +2,7 @@
 
 from math import sqrt
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Tuple
 import numpy as np
 
 EARTH_RADIUS = 6371000.0                    # earth radius [m]
@@ -67,7 +67,7 @@ def wk_waves(component_type: str,
             waves.append(wave)
     return waves
 
-def individual_waves(wave_list: list[tuple[str, int]],
+def individual_waves(wave_list: list[Tuple[str, int]],
                      equivalent_depths: list[float]):
     """Get the user-specified wave types"""
     waves = []
@@ -80,7 +80,7 @@ def individual_waves(wave_list: list[tuple[str, int]],
     return waves
 
 
-def _wk_curves_names(component_type: str) -> tuple[list[str], int]:
+def _wk_curves_names(component_type: str) -> Tuple[list[str], int]:
     """Get curves and polynomial number as used in WK99 figures."""
     if component_type == "symmetric":
         waves = SYMMETRIC_WAVE_TYPES
