@@ -23,7 +23,7 @@ def dataset_to_equatorial_latlon_grid(
 
 def dataarray_to_equatorial_latlon_grid(
     dataarray: xr.DataArray, grid_type: str, grid_dict: Optional[dict]
-) -> xr.Dataset:
+) -> xr.DataArray:
     if grid_type == "latlon":
         return dataarray
     elif grid_type == "healpix":
