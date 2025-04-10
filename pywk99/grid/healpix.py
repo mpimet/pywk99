@@ -43,7 +43,9 @@ def dataarray_healpix_to_equatorial_latlon(
     The latlon array extracted is for a band around the equator.
     """
     if minmax_lat > MAXIMUM_LAT_RANGE:
-        raise ValueError("Latitudes outside healpix equatorial zone.")
+        msg = (f"Selected latitudinal belt (minmax_lat = {minmax_lat}) is too "
+               "wide for a meaningful analysis of equatorial waves.")
+        raise ValueError(msg)
     # get data
     data = healpix_dataarray.values
     time = healpix_dataarray.time.values
