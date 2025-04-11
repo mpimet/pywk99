@@ -18,6 +18,7 @@ Untitled*
 
 # python package
 *.egg-info
+*build
 
 # Jupyterhub checkpoints
 *.ipynb_checkpoints*

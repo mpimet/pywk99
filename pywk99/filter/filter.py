@@ -1,6 +1,6 @@
 """Filter for equatorial wave bands following Wheeler and Kiladis 1999."""
 
-from typing import Optional, Tuple, Union
+from typing import Optional, Union, Tuple
 import xarray as xr
 import numpy as np
 
