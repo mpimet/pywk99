@@ -13,6 +13,9 @@ dependencies:
   - numpy
   - pandas
   - pip
-  - dask
+  - pytest
+  - python>=3.9
+  - shapely
+  - xarray
   - pip:
       - -e .
