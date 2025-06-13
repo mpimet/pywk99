@@ -3,6 +3,9 @@ Wavenumber-frequency analysis in Python.
 
 Changelog
 ---------
+Jun 13, 2025: Version 0.4.4
+    - Allowing renaming of filter windows
+
 Apr 8, 2025: Version 0.4.3
     - Adding support for healpix
 
@@ -70,4 +73,4 @@ Sep 14, 2023: Version 0.1.0
     - Several bugs where detected and corrected with the tests.
 """
 
-__version__ = "0.4.3"
+__version__ = "0.4.4"

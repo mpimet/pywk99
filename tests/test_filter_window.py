@@ -80,3 +80,8 @@ def test_mjo_window_function():
 def test_tropical_depression_window_function():
     td_window = get_tropical_depression_window()
     assert isinstance(td_window, FilterWindow)
+
+
+def test_window_name_can_be_changed(filter_window):
+    filter_window.name = "new_name"
+    assert filter_window.name == "new_name"
