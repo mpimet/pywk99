@@ -98,7 +98,7 @@ def get_cross_spectrum(
 
     See pywk99.spectrum.get_spectrum for argument documentation.
     """
-    cross_spectrum = get_spectrum(
+    spectrum = get_spectrum(
         "cross",
         variable,
         component_type,
@@ -111,72 +111,10 @@ def get_cross_spectrum(
         grid_type,
         grid_dict
     )
+    coh2 = np.abs(spectrum.cross)**2 / np.real(spectrum.spectra1) / np.real(spectrum.spectra2)
+    angle = xr.apply_ufunc(np.angle, spectrum.cross)
+    coh2.name = "coherence_squared"
+    angle.name = "phase"
+    cross_spectrum = xr.merge([spectrum, coh2, angle])
     return cross_spectrum
 
-
-def get_co_spectrum(
-    variable: xr.Dataset,
-    component_type: str,
-    data_frequency: Optional[str] = None,
-    window_length: str = "96D",
-    overlap_length: str = "60D",
-    season: Optional[str] = None,
-    min_periods_season: Optional[int] = None,
-    taper_alpha: Optional[float] = 0.5,
-    grid_type: str = "latlon",
-    grid_dict: Optional[dict] = None,
-) -> xr.DataArray:
-    """
-    Get the Wheeler and Kiladis 1999 co-spectrum of two variables.
-
-    See pywk99.spectrum.get_spectrum for argument documentation.
-    """
-    cross_spectrum = get_spectrum(
-        "cross",
-        variable,
-        component_type,
-        data_frequency,
-        window_length,
-        overlap_length,
-        season,
-        min_periods_season,
-        taper_alpha,
-        grid_type,
-        grid_dict
-    )
-    co_spectrum = np.real(cross_spectrum)
-    return co_spectrum
-
-
-def get_quadrature_spectrum(
-    variable: xr.Dataset,
-    component_type: str,
-    data_frequency: Optional[str] = None,
-    window_length: str = "96D",
-    overlap_length: str = "60D",
-    season: Optional[str] = None,
-    min_periods_season: Optional[int] = None,
-    taper_alpha: Optional[float] = 0.5,
-    grid_type: str = "latlon",
-    grid_dict: Optional[dict] = None,
-) -> xr.DataArray:
-    """
-    Get the Wheeler and Kiladis 1999 quadrature-spectrum of two variables.
-
-    See pywk99.spectrum.get_spectrum for argument documentation.
-    """
-    cross_spectrum = get_spectrum(
-        "cross",
-        variable,
-        component_type,
-        data_frequency,
-        window_length,
-        overlap_length,
-        season,
-        min_periods_season,
-        taper_alpha,
-        grid_type,
-        grid_dict
-    )
-    quadrature_spectrum = np.imag(cross_spectrum)
-    return quadrature_spectrum
