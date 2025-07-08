@@ -3,6 +3,10 @@ Wavenumber-frequency analysis in Python.
 
 Changelog
 ---------
+Jul 8, 2025: Version 0.4.4
+    - Implementing the coherence and amplitude spectra.
+    - Fixing bugs in the cross spectra.
+
 Apr 8, 2025: Version 0.4.3
     - Adding support for healpix
 
@@ -70,4 +74,4 @@ Sep 14, 2023: Version 0.1.0
     - Several bugs where detected and corrected with the tests.
 """
 
-__version__ = "0.4.3"
+__version__ = "0.4.4"
