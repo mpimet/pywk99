@@ -92,7 +92,7 @@ def get_cross_spectrum(
     taper_alpha: Optional[float] = 0.5,
     grid_type: str = "latlon",
     grid_dict: Optional[dict] = None,
-) -> xr.DataArray:
+) -> xr.Dataset:
     """
     Get the Wheeler and Kiladis 1999 coherence, angle and cross spectrum.
 
