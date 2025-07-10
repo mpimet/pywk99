@@ -94,7 +94,7 @@ def get_cross_spectrum(
     grid_dict: Optional[dict] = None,
 ) -> xr.Dataset:
     """
-    Get the Wheeler and Kiladis 1999 coherence, angle and cross spectrum.
+    Get the Wheeler and Kiladis 1999 cross spectrum.
 
     See pywk99.spectrum.get_spectrum for argument documentation.
     """
@@ -115,7 +115,7 @@ def get_cross_spectrum(
 
 
 def coherence_squared(cross_spectrum: xr.DataArray) -> xr.DataArray:
-    """Compute the squared coherence and phase of a cross spectrum."""
+    """Compute the squared coherence a cross spectrum."""
     sxy2 = np.abs(cross_spectrum.cross)**2
     sxx = np.abs(cross_spectrum.spectra1)
     syy = np.abs(cross_spectrum.spectra2)
