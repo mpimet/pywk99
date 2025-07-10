@@ -5,6 +5,7 @@ import pytest
 import xarray as xr
 
 from pywk99.spectrum.spectrum import get_cross_spectrum
+from pywk99.spectrum.spectrum import coherence_squared
 
 
 @pytest.fixture
@@ -27,9 +28,6 @@ def cross_spectrum(variables, request):
     return cross_spectrum
 
 
-def test_cross_spectrum_coherence_is_one(cross_spectrum) -> None:
-    assert np.all(np.ravel(cross_spectrum.coh2.values) == pytest.approx(1.0))
-
-
-def test_cross_spectrum_angle_is_zero(cross_spectrum) -> None:
-    assert np.all(np.ravel(cross_spectrum.phase.values) == pytest.approx(0.0))
+def test_coherence_squared_is_one_for_the_same_field(cross_spectrum) -> None:
+    cho2 = coherence_squared(cross_spectrum)
+    assert np.all(np.ravel(cho2.values) == pytest.approx(1.0))
