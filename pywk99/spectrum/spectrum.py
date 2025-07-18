@@ -153,7 +153,7 @@ def get_co_spectrum(
         grid_type,
         grid_dict
     )
-    co_spectrum = np.real(cross_spectrum)
+    co_spectrum = np.real(cross_spectrum.cross)
     return co_spectrum
 
 
@@ -187,6 +187,6 @@ def get_quadrature_spectrum(
         grid_type,
         grid_dict
     )
-    quadrature_spectrum = np.imag(cross_spectrum)
+    quadrature_spectrum = np.imag(cross_spectrum.cross)
     return quadrature_spectrum
 
