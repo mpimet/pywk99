@@ -3,7 +3,6 @@ from pywk99.spectrum.spectrum import get_spectrum
 from pywk99.spectrum.spectrum import get_power_spectrum
 from pywk99.spectrum.spectrum import get_amplitude_spectrum
 from pywk99.spectrum.spectrum import get_cross_spectrum
-from pywk99.spectrum.spectrum import coherence_squared
 from pywk99.spectrum.spectrum import get_co_spectrum
 from pywk99.spectrum.spectrum import get_quadrature_spectrum
 from pywk99.spectrum.background import get_background_spectrum

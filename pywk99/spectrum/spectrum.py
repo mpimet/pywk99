@@ -111,17 +111,16 @@ def get_cross_spectrum(
         grid_type,
         grid_dict
     )
+    cross_spectrum["coherence_squared"] = _coherence_squared(cross_spectrum)
     return cross_spectrum
 
 
-def coherence_squared(cross_spectrum: xr.DataArray) -> xr.DataArray:
+def _coherence_squared(cross_spectrum: xr.Dataset) -> xr.Dataset:
     """Compute the squared coherence a cross spectrum."""
     sxy2 = np.abs(cross_spectrum.cross)**2
     sxx = np.abs(cross_spectrum.spectra1)
     syy = np.abs(cross_spectrum.spectra2)
-    coh2 =  sxy2 / (sxx * syy)
-    coh2.name = "coh2"
-    return coh2
+    return  sxy2 / (sxx * syy)
 
 
 def get_co_spectrum(
