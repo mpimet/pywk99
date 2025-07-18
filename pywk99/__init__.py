@@ -3,8 +3,8 @@ Wavenumber-frequency analysis in Python.
 
 Changelog
 ---------
-Jul 8, 2025: Version 0.4.4
-    - Implementing the cross spectra and coherence function.
+Jul 18, 2025: Version 0.4.4
+    - Adding coherence to the cross spectra function.
     - Fixing bugs in the cross spectra.
 
 Apr 8, 2025: Version 0.4.3
