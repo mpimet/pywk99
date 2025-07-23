@@ -15,6 +15,7 @@ dependencies = [
     "pandas",
     "shapely",
     "xarray",
+    "healpy"
 ]
 description = "Wheeler and Kiladis Wavenumber-Frequency Analysis in Python"
 requires-python = ">=3.10"
