@@ -92,9 +92,9 @@ def get_cross_spectrum(
     taper_alpha: Optional[float] = 0.5,
     grid_type: str = "latlon",
     grid_dict: Optional[dict] = None,
-) -> xr.DataArray:
+) -> xr.Dataset:
     """
-    Get the Wheeler and Kiladis 1999 cross spectrum of two variables.
+    Get the Wheeler and Kiladis 1999 cross spectrum.
 
     See pywk99.spectrum.get_spectrum for argument documentation.
     """
@@ -111,7 +111,16 @@ def get_cross_spectrum(
         grid_type,
         grid_dict
     )
+    cross_spectrum["coherence_squared"] = _coherence_squared(cross_spectrum)
     return cross_spectrum
+
+
+def _coherence_squared(cross_spectrum: xr.Dataset) -> xr.Dataset:
+    """Compute the squared coherence a cross spectrum."""
+    sxy2 = np.abs(cross_spectrum.cross)**2
+    sxx = np.abs(cross_spectrum.spectra1)
+    syy = np.abs(cross_spectrum.spectra2)
+    return  sxy2 / (sxx * syy)
 
 
 def get_co_spectrum(
@@ -144,7 +153,7 @@ def get_co_spectrum(
         grid_type,
         grid_dict
     )
-    co_spectrum = np.real(cross_spectrum)
+    co_spectrum = np.real(cross_spectrum.cross)
     return co_spectrum
 
 
@@ -178,5 +187,6 @@ def get_quadrature_spectrum(
         grid_type,
         grid_dict
     )
-    quadrature_spectrum = np.imag(cross_spectrum)
+    quadrature_spectrum = np.imag(cross_spectrum.cross)
     return quadrature_spectrum
+

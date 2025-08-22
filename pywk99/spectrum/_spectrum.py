@@ -110,7 +110,7 @@ def get_spectrum(spc_quantity: str,
     ]
     number_of_spectrums = len(wk_spectrums)
     wk_spectrum = (sum(wk_spectrums) / number_of_spectrums).sum("lat")
-    wk_spectrum = wk_spectrum[wk_spectrum.frequency > 0]
+    wk_spectrum = wk_spectrum.where(wk_spectrum.frequency > 0, drop=True)
     wk_spectrum = wk_spectrum.sortby(["frequency", "wavenumber"])
     return wk_spectrum
 
@@ -178,9 +178,17 @@ def _compute_hayashi_cross_spectrum(variables: xr.Dataset) -> xr.DataArray:
     n_time = len(variables.time)
     n_lon = len(variables.lon)
     varlist = list(variables.keys())
-    variable1_fft = fourier_transform(variables[varlist[0]]) / (n_time * n_lon)
-    variable2_fft = fourier_transform(variables[varlist[1]]) / (n_time * n_lon)
-    cross_spectrum = variable1_fft * np.conj(variable2_fft)
+    variable1_name = varlist[0]
+    variable2_name = varlist[1]
+    variable1_fft = fourier_transform(variables[variable1_name])
+    variable2_fft = fourier_transform(variables[variable2_name])
+    spectrum_1 = np.abs(variable1_fft)**2 / (n_time * n_lon)**2
+    spectrum_2 = np.abs(variable2_fft)**2 / (n_time * n_lon)**2
+    cross_1_2 = variable1_fft * np.conj(variable2_fft) / (n_time * n_lon)**2
+    spectrum_1.name = f"spectra1"
+    spectrum_2.name = f"spectra2"
+    cross_1_2.name = f"cross"
+    cross_spectrum = xr.merge([spectrum_1, spectrum_2, cross_1_2])
     return cross_spectrum
 
 
