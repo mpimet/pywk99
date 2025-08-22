@@ -28,5 +28,5 @@ def cross_spectrum(variables, request):
 
 
 def test_coherence_squared_is_one_for_the_same_field(cross_spectrum) -> None:
-    cho2 = cross_spectrum.coherence_squared
-    assert np.all(np.ravel(cho2.values) == pytest.approx(1.0))
+    coh2 = cross_spectrum.coherence_squared
+    assert np.all(np.ravel(coh2.values) == pytest.approx(1.0))
