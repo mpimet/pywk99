@@ -84,6 +84,33 @@ def get_spectrum(spc_quantity: str,
         If variable coordinates are not sorted.
         If the season is not recognized.
     """
+    spectra = get_window_spectra(spc_quantity,
+                                 variable,
+                                 component_type,
+                                 data_frequency,
+                                 window_length,
+                                 overlap_length,
+                                 season,
+                                 min_periods_season,
+                                 taper_alpha,
+                                 grid_type,
+                                 grid_dict)
+    number = len(spectra)
+    wk_spectrum = sum(spectra) / number
+    return wk_spectrum    
+
+
+def get_window_spectra(spc_quantity: str,
+                       variable: Union[xr.DataArray, xr.Dataset],
+                       component_type: str,
+                       data_frequency: Optional[str] = None,
+                       window_length: Optional[str] = None,
+                       overlap_length: Optional[str] = None,
+                       season: Optional[str] = None,
+                       min_periods_season: Optional[int] = None,
+                       taper_alpha: Optional[float] = None,
+                       grid_type: str = None,
+                       grid_dict: Optional[dict] = None) -> xr.DataArray:
     # process inputs
     check_for_one_max_two_variables(variable)
     variable = convert_to_dataset(variable)
@@ -102,17 +129,13 @@ def get_spectrum(spc_quantity: str,
     if season is not None:
         variable_segments = _choose_segments_within_season(
             variable_segments, season, min_periods_season)
-    # construct spectrum
-    wk_spectrums = [
+    # construct spectra for each segment
+    spectra = [
         _one_segment_spectrum(variable_segment, spc_quantity, component_type,
                               data_frequency_np, taper_alpha)
         for variable_segment in variable_segments
     ]
-    number_of_spectrums = len(wk_spectrums)
-    wk_spectrum = (sum(wk_spectrums) / number_of_spectrums).sum("lat")
-    wk_spectrum = wk_spectrum.where(wk_spectrum.frequency > 0, drop=True)
-    wk_spectrum = wk_spectrum.sortby(["frequency", "wavenumber"])
-    return wk_spectrum
+    return spectra
 
 
 def _get_data_frequency(
@@ -126,7 +149,8 @@ def _get_data_frequency(
     return data_frequency_np
 
 
-def _one_segment_spectrum(variable_segment: xr.Dataset, spc_quantity: str,
+def _one_segment_spectrum(variable_segment: xr.Dataset, 
+                          spc_quantity: str,
                           component_type: str,
                           data_frequency: np.timedelta64,
                           taper_alpha: float) -> xr.DataArray:
@@ -137,6 +161,9 @@ def _one_segment_spectrum(variable_segment: xr.Dataset, spc_quantity: str,
     if component_type != 'full':
         new_segment = _get_symmetry_component(new_segment, component_type)
     wk_spectrum = _compute_hayashi_spectrum(new_segment, spc_quantity)
+    wk_spectrum = wk_spectrum.where(wk_spectrum.frequency > 0, drop=True)
+    wk_spectrum = wk_spectrum.sortby(["frequency", "wavenumber"])
+    wk_spectrum = wk_spectrum.sum("lat")
     return wk_spectrum
 
 
