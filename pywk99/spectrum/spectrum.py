@@ -11,6 +11,7 @@ import numpy as np
 import xarray as xr
 
 from pywk99.spectrum._spectrum import get_spectrum
+from pywk99.spectrum._spectrum import _get_window_spectra
 
 _VALID_SEASONS = ["DJF", "MAM", "JJA", "SON"]
 
@@ -190,3 +191,29 @@ def get_quadrature_spectrum(
     quadrature_spectrum = np.imag(cross_spectrum.cross)
     return quadrature_spectrum
 
+
+def get_window_spectra(
+    spc_quantity: str,
+    variable: xr.DataArray,
+    component_type: str,
+    data_frequency: Optional[str] = None,
+    window_length: str = "96D",
+    overlap_length: str = "60D",
+    season: Optional[str] = None,
+    min_periods_season: Optional[int] = None,
+    taper_alpha: Optional[float] = 0.5,
+    grid_type: str = "latlon",
+    grid_dict: Optional[dict] = None,
+) -> xr.DataArray:
+    spectra = _get_window_spectra(spc_quantity,
+                                  variable,
+                                  component_type,
+                                  data_frequency,
+                                  window_length,
+                                  overlap_length,
+                                  season,
+                                  min_periods_season,
+                                  taper_alpha,
+                                  grid_type,
+                                  grid_dict)
+    return spectra

@@ -84,7 +84,7 @@ def get_spectrum(spc_quantity: str,
         If variable coordinates are not sorted.
         If the season is not recognized.
     """
-    spectra = get_window_spectra(spc_quantity,
+    spectra = _get_window_spectra(spc_quantity,
                                  variable,
                                  component_type,
                                  data_frequency,
@@ -100,17 +100,17 @@ def get_spectrum(spc_quantity: str,
     return wk_spectrum    
 
 
-def get_window_spectra(spc_quantity: str,
-                       variable: Union[xr.DataArray, xr.Dataset],
-                       component_type: str,
-                       data_frequency: Optional[str] = None,
-                       window_length: Optional[str] = None,
-                       overlap_length: Optional[str] = None,
-                       season: Optional[str] = None,
-                       min_periods_season: Optional[int] = None,
-                       taper_alpha: Optional[float] = None,
-                       grid_type: str = None,
-                       grid_dict: Optional[dict] = None) -> xr.DataArray:
+def _get_window_spectra(spc_quantity: str,
+                        variable: Union[xr.DataArray, xr.Dataset],
+                        component_type: str,
+                        data_frequency: Optional[str] = None,
+                        window_length: Optional[str] = None,
+                        overlap_length: Optional[str] = None,
+                        season: Optional[str] = None,
+                        min_periods_season: Optional[int] = None,
+                        taper_alpha: Optional[float] = None,
+                        grid_type: str = None,
+                        grid_dict: Optional[dict] = None) -> xr.DataArray:
     # process inputs
     check_for_one_max_two_variables(variable)
     variable = convert_to_dataset(variable)
