@@ -8,16 +8,16 @@ def get_background_spectrum(symmetric_spectrum: xr.DataArray,
                             asymmetric_spectrum: xr.DataArray) -> xr.DataArray:
     """Get the background spectrum from wheeler and kiladis"""
     new_spectrum = (symmetric_spectrum + asymmetric_spectrum)/2
-    new_spectrum = _smooth_spectrum(new_spectrum)
+    new_spectrum = smooth_spectrum(new_spectrum)
     return new_spectrum
 
 
-def _smooth_spectrum(spectrum: xr.DataArray) -> xr.DataArray:
+def smooth_spectrum(spectrum: xr.DataArray, passes: int = 10) -> xr.DataArray:
     """Smooth the Power Spectrum with a 121 filter."""
     new_spectrum = spectrum.copy()
     rows, columns = np.shape(spectrum)
     # looping over rows and vector as spectrum matrix size is small
-    for _ in range(10):
+    for _ in range(passes):
         for row in range(rows):
             new_spectrum[row, :] = _filter_121(new_spectrum[row, :])
         for column in range(columns):

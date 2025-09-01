@@ -4,7 +4,7 @@ import random
 import numpy as np
 import xarray as xr
 
-from pywk99.spectrum.background import _smooth_spectrum
+from pywk99.spectrum.background import smooth_spectrum
 
 
 def bootstrap_mean_difference_test(spectra_a,
@@ -55,6 +55,6 @@ def _compute_confidence_intervals(bootstrap_distances, alpha):
     ci_upper = bootstrap_distances.quantile(
         quantile_upper, dim="bootstrap_iteration"
         ).rename("upper").drop("quantile")
-    ci_lower = _smooth_spectrum(ci_lower)
-    ci_upper = _smooth_spectrum(ci_upper)
+    ci_lower = smooth_spectrum(ci_lower)
+    ci_upper = smooth_spectrum(ci_upper)
     return ci_lower, ci_upper
