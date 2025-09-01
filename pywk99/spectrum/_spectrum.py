@@ -97,7 +97,7 @@ def get_spectrum(spc_quantity: str,
                                  grid_dict)
     number = len(spectra)
     wk_spectrum = sum(spectra) / number
-    return wk_spectrum    
+    return wk_spectrum
 
 
 def _get_window_spectra(spc_quantity: str,
@@ -149,7 +149,7 @@ def _get_data_frequency(
     return data_frequency_np
 
 
-def _one_segment_spectrum(variable_segment: xr.Dataset, 
+def _one_segment_spectrum(variable_segment: xr.Dataset,
                           spc_quantity: str,
                           component_type: str,
                           data_frequency: np.timedelta64,
@@ -163,7 +163,10 @@ def _one_segment_spectrum(variable_segment: xr.Dataset,
     wk_spectrum = _compute_hayashi_spectrum(new_segment, spc_quantity)
     wk_spectrum = wk_spectrum.where(wk_spectrum.frequency > 0, drop=True)
     wk_spectrum = wk_spectrum.sortby(["frequency", "wavenumber"])
-    wk_spectrum = wk_spectrum.sum("lat")
+    if spc_quantity == "cross":
+        wk_spectrum = wk_spectrum.mean("lat")
+    else:
+        wk_spectrum = wk_spectrum.sum("lat")
     return wk_spectrum
 
 
