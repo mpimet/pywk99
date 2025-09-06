@@ -5,6 +5,7 @@ from pywk99.spectrum.spectrum import get_amplitude_spectrum
 from pywk99.spectrum.spectrum import get_cross_spectrum
 from pywk99.spectrum.spectrum import get_co_spectrum
 from pywk99.spectrum.spectrum import get_quadrature_spectrum
+from pywk99.spectrum.spectrum import get_ionue_2020_tau_spectrum
 from pywk99.spectrum.spectrum import get_window_spectra
 from pywk99.spectrum.background import get_background_spectrum
 from pywk99.spectrum.background import smooth_spectrum

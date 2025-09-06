@@ -10,6 +10,7 @@ from typing import Optional
 import numpy as np
 import xarray as xr
 
+from pywk99.spectrum.background import smooth_spectrum
 from pywk99.spectrum._spectrum import get_spectrum
 from pywk99.spectrum._spectrum import _get_window_spectra
 
@@ -217,3 +218,40 @@ def get_window_spectra(
                                   grid_type,
                                   grid_dict)
     return spectra
+
+
+def get_ionue_2020_tau_spectrum(
+    variable: xr.Dataset,
+    component_type: str,
+    data_frequency: Optional[str] = None,
+    window_length: str = "96D",
+    overlap_length: str = "60D",
+    season: Optional[str] = None,
+    min_periods_season: Optional[int] = None,
+    taper_alpha: Optional[float] = 0.5,
+    grid_type: str = "latlon",
+    grid_dict: Optional[dict] = None,
+) -> xr.Dataset:
+    """
+    See pywk99.spectrum.get_spectrum for argument documentation.
+    """
+    cross_spectrum = get_spectrum(
+        "inoue_2020",
+        variable,
+        component_type,
+        data_frequency,
+        window_length,
+        overlap_length,
+        season,
+        min_periods_season,
+        taper_alpha,
+        grid_type,
+        grid_dict
+    )
+    A = smooth_spectrum(cross_spectrum["A"], passes=3)
+    B = smooth_spectrum(cross_spectrum["B"], passes=3)
+    tau = A/B
+    cross_spectrum["top_heaviness"] = np.real(tau)
+    cross_spectrum["tilt"] = np.imag(tau)
+    cross_spectrum.drop_vars(["A", "B"])
+    return cross_spectrum

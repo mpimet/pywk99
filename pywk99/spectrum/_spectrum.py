@@ -172,7 +172,8 @@ def _compute_hayashi_spectrum(variable: xr.Dataset,
     spectrum_functions = {
         "power": _compute_hayashi_power_spectrum,
         "amplitude": _compute_hayashi_amplitude_spectrum,
-        "cross": _compute_hayashi_cross_spectrum
+        "cross": _compute_hayashi_cross_spectrum,
+        "inoue_2020": _compute_inoue_2020_cross_spectrum
     }
     spectrum_function = spectrum_functions[spc_quantity]
     spectrum = spectrum_function(variable)
@@ -218,6 +219,25 @@ def _compute_hayashi_cross_spectrum(variables: xr.Dataset) -> xr.DataArray:
     cross_1_2.name = f"cross"
     cross_spectrum = xr.merge([spectrum_1, spectrum_2, cross_1_2])
     cross_spectrum = cross_spectrum.mean("lat")
+    return cross_spectrum
+
+
+def _compute_inoue_2020_cross_spectrum(variables: xr.Dataset) -> xr.DataArray:
+    check_for_exactly_two_variables(variables)
+    n_time = len(variables.time)
+    n_lon = len(variables.lon)
+    varlist = list(variables.keys())
+    variable1_name = varlist[0]
+    variable2_name = varlist[1]
+    O1 = fourier_transform(variables[variable1_name]) / (n_time * n_lon)
+    O2 = fourier_transform(variables[variable2_name]) / (n_time * n_lon)
+    A = O2 * np.conj(O1)
+    B = O1 * np.conj(O1)
+    A = A.mean("lat")
+    B = B.mean("lat")
+    A.name = f"A"
+    B.name = f"B"
+    cross_spectrum = xr.merge([A, B])
     return cross_spectrum
 
 
