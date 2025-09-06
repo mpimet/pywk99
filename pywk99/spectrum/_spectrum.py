@@ -163,10 +163,6 @@ def _one_segment_spectrum(variable_segment: xr.Dataset,
     wk_spectrum = _compute_hayashi_spectrum(new_segment, spc_quantity)
     wk_spectrum = wk_spectrum.where(wk_spectrum.frequency > 0, drop=True)
     wk_spectrum = wk_spectrum.sortby(["frequency", "wavenumber"])
-    if spc_quantity == "cross":
-        wk_spectrum = wk_spectrum.mean("lat")
-    else:
-        wk_spectrum = wk_spectrum.sum("lat")
     return wk_spectrum
 
 
@@ -190,6 +186,7 @@ def _compute_hayashi_power_spectrum(variable: xr.Dataset) -> xr.DataArray:
     varname = list(variable.keys())[0]
     variable_fft = fourier_transform(variable[varname])
     spectrum = np.abs(variable_fft / (n_time * n_lon))**2
+    spectrum = spectrum.sum("lat")
     return spectrum
 
 
@@ -200,6 +197,7 @@ def _compute_hayashi_amplitude_spectrum(
     varname = list(variable.keys())[0]
     variable_fft = fourier_transform(variable[varname])
     spectrum = np.abs(variable_fft / (n_time * n_lon))
+    spectrum = spectrum.sum("lat")
     return spectrum
 
 
@@ -219,6 +217,7 @@ def _compute_hayashi_cross_spectrum(variables: xr.Dataset) -> xr.DataArray:
     spectrum_2.name = f"spectra2"
     cross_1_2.name = f"cross"
     cross_spectrum = xr.merge([spectrum_1, spectrum_2, cross_1_2])
+    cross_spectrum = cross_spectrum.mean("lat")
     return cross_spectrum
 
 
