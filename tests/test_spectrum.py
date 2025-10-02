@@ -116,3 +116,12 @@ def test_choose_segments_within_season(variable) -> None:
                                                        min_periods_season)
     for segment in variable_segments:
         assert np.sum(segment.time.dt.season == season) >= min_periods_season
+
+
+def test_spectrum_has_dof_for_single_variate(spectrum) -> None:
+    assert spectrum.attrs["dof_single_variate"]
+
+
+def test_spectrum_has_number_of_windows(spectrum) -> None:
+    assert spectrum.attrs["number_of_windows"]
+
