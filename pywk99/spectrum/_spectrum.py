@@ -5,6 +5,8 @@ import numpy as np
 import xarray as xr
 import pandas as pd
 
+from pywk99.spectrum._dof import degrees_of_freedom_for_single_variate
+
 from pywk99.timeseries.fourier import fourier_transform
 from pywk99.timeseries.timeseries import check_for_exactly_two_variables
 from pywk99.timeseries.timeseries import convert_to_dataset
@@ -85,18 +87,26 @@ def get_spectrum(spc_quantity: str,
         If the season is not recognized.
     """
     spectra = _get_window_spectra(spc_quantity,
-                                 variable,
-                                 component_type,
-                                 data_frequency,
-                                 window_length,
-                                 overlap_length,
-                                 season,
-                                 min_periods_season,
-                                 taper_alpha,
-                                 grid_type,
-                                 grid_dict)
+                                  variable,
+                                  component_type,
+                                  data_frequency,
+                                  window_length,
+                                  overlap_length,
+                                  season,
+                                  min_periods_season,
+                                  taper_alpha,
+                                  grid_type,
+                                  grid_dict)
     number = len(spectra)
     wk_spectrum = sum(spectra) / number
+    latitudes = _get_latitude_range(variable, grid_type, grid_dict)
+    dof = degrees_of_freedom_for_single_variate(latitudes,
+                             variable.time.min().values,
+                             variable.time.max().values,
+                             window_length,
+                             season)
+    wk_spectrum.attrs["dof_single_variate"] = dof
+    wk_spectrum.attrs["number_of_windows"] = number
     return wk_spectrum
 
 
@@ -329,3 +339,13 @@ def _choose_segments_within_season(
         if np.sum(season == segment.time.dt.season) >= min_periods_season
     ]
     return variable_segments
+
+
+
+def _get_latitude_range(variable, grid_type, grid_dict):
+    if grid_type == "healpix":
+        minmax_lat = grid_dict["minmax_lat"]
+        latitudes = [-minmax_lat, minmax_lat]
+        return latitudes
+    latitudes = variable.lat
+    return latitudes
