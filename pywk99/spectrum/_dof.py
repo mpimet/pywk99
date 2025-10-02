@@ -14,7 +14,7 @@ def degrees_of_freedom_for_single_variate(
     """Conservatively estimate the degrees of freedom of a single variate."""
     independent_latitudes = _get_independent_latitudes(latitudes)
     period_length = _get_period_length(start, end, season)
-    dof = _degrees_of_freedom_for_single_estimate(
+    dof = _degrees_of_freedom_for_single_variate(
         independent_latitudes, period_length, window_length
     )
     return dof
@@ -37,7 +37,7 @@ def _get_independent_latitudes(latitudes: Sequence[float]) -> float:
     return independent_latitudes
 
 
-def _degrees_of_freedom_for_single_estimate(
+def _degrees_of_freedom_for_single_variate(
     independent_latitudes: float,
     period_length: pd.Timedelta,
     window_length: Union[str, pd.Timedelta],
