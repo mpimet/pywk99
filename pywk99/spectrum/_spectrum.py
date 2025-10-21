@@ -30,7 +30,8 @@ def get_spectrum(spc_quantity: str,
                  min_periods_season: Optional[int] = None,
                  taper_alpha: Optional[float] = None,
                  grid_type: str = None,
-                 grid_dict: Optional[dict] = None) -> xr.DataArray:
+                 grid_dict: Optional[dict] = None) -> Union[xr.DataArray,
+                                                            xr.Dataset]:
     """
     Get a Wheeler and Kiladis 1999 power, amplitude or cross spectrum.
 
@@ -73,10 +74,10 @@ def get_spectrum(spc_quantity: str,
 
     Returns
     -------
-    wk_spectrum : xr.DataArray
-        Datarray with "frequency" and "wavenumber" coordinates. The zonal
-        wavenumber-frequency power spectra for the variable, summed over all
-        "lat" coordinates.
+    wk_spectrum : xr.DataArray or xr.Dataset
+        Datarray or Dataset with "frequency" and "wavenumber" coordinates. The
+        requested zonal wavenumber-frequency spectra for the variable, is
+        summed over all "lat" coordinates.
 
     Raises
     ------
@@ -97,16 +98,16 @@ def get_spectrum(spc_quantity: str,
                                   taper_alpha,
                                   grid_type,
                                   grid_dict)
-    number = len(spectra)
-    wk_spectrum = sum(spectra) / number
+    number_of_windows = len(spectra)
+    wk_spectrum = sum(spectra) / number_of_windows
     latitudes = _get_latitude_range(variable, grid_type, grid_dict)
     dof = degrees_of_freedom_for_single_variate(latitudes,
-                             variable.time.min().values,
-                             variable.time.max().values,
-                             window_length,
-                             season)
+                                                variable.time.min().values,
+                                                variable.time.max().values,
+                                                window_length,
+                                                season)
     wk_spectrum.attrs["dof_single_variate"] = dof
-    wk_spectrum.attrs["number_of_windows"] = number
+    wk_spectrum.attrs["number_of_windows"] = number_of_windows
     return wk_spectrum
 
 
