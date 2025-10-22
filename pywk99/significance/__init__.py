@@ -1,0 +1,4 @@
+from pywk99.significance.coherence import coherence_squared_significance
+from pywk99.significance.difference import bootstrap_difference_test
+from pywk99.significance.difference import log_distance_statistic
+from pywk99.significance.difference import coh2_distance_statistic

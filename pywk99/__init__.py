@@ -3,8 +3,10 @@ Wavenumber-frequency analysis in Python.
 
 Changelog
 ---------
-Aug 30, 2025: Version 0.4.5_alpha
+Aug 30, 2025: Version 0.4.5_beta
     - Implementing significant test for spectral difference.
+    - Implemented coherence squared test
+    - Added number of windows and degrees of freedom attributes
 
 Jul 18, 2025: Version 0.4.4
     - Adding coherence to the cross spectra function.
