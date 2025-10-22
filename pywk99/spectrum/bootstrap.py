@@ -1,4 +1,4 @@
-"""Asses the spectral significance in the difference of two spectra."""
+"""Asses the significance in the difference of two spectra."""
 import random
 from typing import Callable
 

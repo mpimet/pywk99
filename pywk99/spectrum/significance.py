@@ -1,4 +1,4 @@
-"""Assert the significance of spectra."""
+"""Assert the significance of statistical estimates."""
 
 import xarray as xr
 
