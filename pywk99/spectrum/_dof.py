@@ -43,6 +43,6 @@ def _degrees_of_freedom_for_single_variate(
     window_length: Union[str, pd.Timedelta],
 ) -> int:
     dof = int(
-        independent_latitudes * period_length / pd.Timedelta(window_length)
+        (period_length / pd.Timedelta(window_length)) * independent_latitudes
     )
     return dof
