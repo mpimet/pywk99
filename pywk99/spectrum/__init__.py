@@ -11,4 +11,5 @@ from pywk99.spectrum.background import get_background_spectrum
 from pywk99.spectrum.background import smooth_spectrum
 from pywk99.spectrum.plot import plot_spectrum
 from pywk99.spectrum.plot import plot_spectrum_peaks
-
+from pywk99.spectrum.plot import plot_coherence
+from pywk99.spectrum.plot import plot_phase_arrows
