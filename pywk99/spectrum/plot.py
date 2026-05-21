@@ -112,9 +112,9 @@ def plot_phase_arrows(cross_spectrum: xr.DataArray,
     # compute coherence and phase arrows
     coh2 = plot_spectrum.coherence_squared
     coh2 = coh2.where(coh2 > coherence_threshold, drop=True)
-    u = xr.apply_ufunc(np.real, 1j * np.conj(plot_spectrum.cross) )
+    u = xr.apply_ufunc(np.real, 1j * plot_spectrum.cross )
     u = u / np.abs(plot_spectrum.cross)
-    v = xr.apply_ufunc(np.imag, 1j * np.conj(plot_spectrum.cross) )
+    v = xr.apply_ufunc(np.imag, 1j * plot_spectrum.cross )
     v = v / np.abs(plot_spectrum.cross)
     u = u.where(coh2 > coherence_threshold, drop=True)
     v = v.where(coh2 > coherence_threshold, drop=True)

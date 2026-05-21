@@ -224,7 +224,7 @@ def _compute_hayashi_cross_spectrum(variables: xr.Dataset) -> xr.DataArray:
     variable2_fft = fourier_transform(variables[variable2_name])
     spectrum_1 = np.abs(variable1_fft)**2 / (n_time * n_lon)**2
     spectrum_2 = np.abs(variable2_fft)**2 / (n_time * n_lon)**2
-    cross_1_2 = variable1_fft * np.conj(variable2_fft) / (n_time * n_lon)**2
+    cross_1_2 = np.conj(variable1_fft) * variable2_fft / (n_time * n_lon)**2
     spectrum_1.name = f"spectra1"
     spectrum_2.name = f"spectra2"
     cross_1_2.name = f"cross"

@@ -3,6 +3,10 @@ Wavenumber-frequency analysis in Python.
 
 Changelog
 ---------
+May 21, 2026: Version 0.5.0_alpha
+    - Changed definition of cross spectra to align with Hayashi
+    - Implemented coherence and phase arrow functions
+
 Aug 30, 2025: Version 0.4.5_beta
     - Implementing significant test for spectral difference.
     - Implemented coherence squared test
@@ -79,4 +83,4 @@ Sep 14, 2023: Version 0.1.0
     - Several bugs where detected and corrected with the tests.
 """
 
-__version__ = "0.4.5_alpha2"
+__version__ = "0.5.0_alpha"
