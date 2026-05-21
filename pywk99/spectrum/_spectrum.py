@@ -172,8 +172,6 @@ def _one_segment_spectrum(variable_segment: xr.Dataset,
     if component_type != 'full':
         new_segment = _get_symmetry_component(new_segment, component_type)
     wk_spectrum = _compute_hayashi_spectrum(new_segment, spc_quantity)
-    wk_spectrum = wk_spectrum.where(wk_spectrum.frequency > 0, drop=True)
-    wk_spectrum = wk_spectrum.sortby(["frequency", "wavenumber"])
     return wk_spectrum
 
 
@@ -188,7 +186,8 @@ def _compute_hayashi_spectrum(variable: xr.Dataset,
     }
     spectrum_function = spectrum_functions[spc_quantity]
     spectrum = spectrum_function(variable)
-    spectrum = spectrum.where(spectrum.frequency >= 0, drop=True)
+    spectrum = spectrum.where(spectrum.frequency > 0, drop=True)
+    spectrum = spectrum.sortby(["frequency", "wavenumber"])
     return spectrum
 
 
