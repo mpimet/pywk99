@@ -53,24 +53,22 @@ def inverse_fourier_transform(spectrum: xr.DataArray,
 
 def _get_frequencies(variable: xr.DataArray) -> np.ndarray:
     """Get the frequency in cycles per day after a numpy fftshift."""
-    period_timedelta = variable.time[-1].values - variable.time[0].values
-    period = period_timedelta.astype("timedelta64[D]").astype(int)
+    sampling_rate = variable.time[1].values - variable.time[0].values
+    sampling_rate = sampling_rate.astype("timedelta64[s]").astype(float)
+    sampling_rate = sampling_rate / 86400 # in cycles per day
+    sampling_fs = 1 / sampling_rate
     n_time = len(variable.time)
-    frequency = _fourier_sequence(n_time)/period
+    fourier_sequence = np.fft.fftfreq(n_time, 1/n_time).astype(int)
+    fourier_sequence = np.fft.fftshift(fourier_sequence)
+    frequency = fourier_sequence * sampling_fs / n_time
     return frequency
 
 
 def _get_wavenumbers(variable: xr.DataArray) -> np.ndarray:
     """Get the zonal wavenumbers of the fft spectrum after a numpy fftshift."""
     n_lon = len(variable.lon)
-    wavenumbers = _fourier_sequence(n_lon)
-    wavenumbers = - wavenumbers  # positive wave number is eastward in WK99
-    return wavenumbers
+    wavenumber = np.fft.fftfreq(n_lon, 1/n_lon).astype(int)
+    wavenumber = np.fft.fftshift(wavenumber)
+    wavenumber = -wavenumber  # positive wave number is eastward in WK99
+    return wavenumber
 
-
-def _fourier_sequence(n_len: int) -> np.ndarray:
-    """Get the DFT number sequence after a numpy fftshift."""
-    fourier_sequence = n_len*np.fft.fftfreq(n_len)
-    fourier_sequence = np.fft.fftshift(fourier_sequence)
-    fourier_sequence = np.round(fourier_sequence).astype(int)
-    return fourier_sequence

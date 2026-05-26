@@ -46,9 +46,13 @@ def test_fourier_foward_and_backward_multiple_height(variable):
 
 
 def test_fourier_assigned_frequency(variable_segment):
+    ntime = len(variable_segment.time)
     spectrum = fourier_transform(variable_segment)
-    expected_positive_frequencies = [val/96 for val in range(97)]
-    expected_negative_frequencies = [val/96 for val in range(-96, 0, 1)]
+    sampling_frequency = 1/0.5 # CPD
+    expected_positive_frequencies = [k*sampling_frequency/ntime
+                                    for k in range(ntime//2+1)]
+    expected_negative_frequencies = [k*sampling_frequency/ntime
+                                    for k in range(-ntime//2+1,0,1)]
     expected_frequencies = (expected_negative_frequencies +
                             expected_positive_frequencies)
     expected_frequencies = np.array(expected_frequencies)

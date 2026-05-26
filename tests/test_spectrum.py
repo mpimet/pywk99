@@ -62,7 +62,7 @@ def test_power_spectrum_shape(spectrum):
 
 
 def test_power_spectrum_frequency(spectrum):
-    assert np.all(spectrum.frequency.values == np.arange(1, 30)/29)
+    assert np.all(spectrum.frequency.values == np.arange(1, 30)/30)
 
 
 def test_power_spectrum_wavenumbers(spectrum):
@@ -77,7 +77,7 @@ def test_passing_data_frequency_as_argument_works(variable) -> None:
                                   window_length="30D",
                                   overlap_length="10D")
     assert np.shape(spectrum) == (29, 144)
-    assert np.all(spectrum.frequency.values == np.arange(1, 30)/29)
+    assert np.all(spectrum.frequency.values == np.arange(1, 30)/30)
     assert np.all(spectrum.wavenumber.values == np.arange(-71, 73))
 
 
@@ -89,7 +89,7 @@ def test_spectrum_for_specific_one_season(variable) -> None:
                                   overlap_length="10D",
                                   season="MAM")
     assert np.shape(spectrum) == (29, 144)
-    assert np.all(spectrum.frequency.values == np.arange(1, 30)/29)
+    assert np.all(spectrum.frequency.values == np.arange(1, 30)/30)
     assert np.all(spectrum.wavenumber.values == np.arange(-71, 73))
 
 

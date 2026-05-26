@@ -51,7 +51,7 @@ def test_power_spectrum_shape(spectrum):
 
 
 def test_power_spectrum_frequency_between_zero_and_one(spectrum):
-    assert np.all(spectrum.frequency.values == np.arange(1, 30)/29)
+    assert np.all(spectrum.frequency.values == np.arange(1, 30)/30)
 
 
 def test_power_spectrum_wavenumbers(spectrum):
