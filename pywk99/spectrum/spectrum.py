@@ -250,7 +250,7 @@ def get_ionue_2020_tau_spectrum(
     )
     A = smooth_spectrum(cross_spectrum["A"], passes=3)
     B = smooth_spectrum(cross_spectrum["B"], passes=3)
-    tau = A/B
+    tau = np.conj(A/B) # Aligns FFT definitions or Inoue 2020 with pywk99
     cross_spectrum["top_heaviness"] = np.real(tau)
     cross_spectrum["tilt"] = np.imag(tau)
     cross_spectrum.drop_vars(["A", "B"])
