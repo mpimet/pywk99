@@ -11,7 +11,7 @@ Untitled*
 .vscode
 
 # example data
-/*.nc
+*.nc
 /examples/data*.nc
 /examples/data/*.nc
 
@@ -24,3 +24,6 @@ Untitled*
 
 # Mac OS
 .DS_store
+
+# shell scripts
+*.sh
