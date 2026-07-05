@@ -7,8 +7,7 @@ import numpy as np
 import xarray as xr
 
 from pywk99.spectrum.background import smooth_spectrum
-from pywk99.spectrum.spectrum import _coherence_squared
-
+from pywk99.significance.statistics import log_distance_statistic
 
 STATISTIC_CALLABLE = Callable[
     [Union[xr.DataArray, xr.Dataset], Union[xr.DataArray, xr.Dataset]],
@@ -17,8 +16,8 @@ STATISTIC_CALLABLE = Callable[
 
 
 def bootstrap_difference_test(
-    spectra_a: Union[xr.DataArray, xr.Dataset],
-    spectra_b: Union[xr.DataArray, xr.Dataset],
+    spectra_a: list[Union[xr.DataArray, xr.Dataset]],
+    spectra_b: list[Union[xr.DataArray, xr.Dataset]],
     statistic_function: STATISTIC_CALLABLE = None,
     alpha: float = 0.05,
     resamplings: int = 1000,
@@ -72,23 +71,3 @@ def _compute_confidence_intervals(bootstrap_distances, alpha):
     ci_lower.name = "lower"
     ci_upper.name = "upper"
     return ci_lower, ci_upper
-
-
-# Statistic functions
-def log_distance_statistic(spectra_a, spectra_b):
-    wk_spectrum_a = sum(spectra_a) / len(spectra_a)
-    wk_spectrum_b = sum(spectra_b) / len(spectra_b)
-    log_distance = np.log10(wk_spectrum_b / wk_spectrum_a)
-    return log_distance
-
-
-def coh2_distance_statistic(crs_spectra_a, crs_spectra_b):
-    smoothing_passes = 10
-    coh2_a = sum(crs_spectra_a) / len(crs_spectra_a)
-    coh2_b = sum(crs_spectra_b) / len(crs_spectra_b)
-    coh2_a = _coherence_squared(coh2_a)
-    coh2_b = _coherence_squared(coh2_b)
-    coh2_a = smooth_spectrum(coh2_a, smoothing_passes)
-    coh2_b = smooth_spectrum(coh2_b, smoothing_passes)
-    distance = coh2_b - coh2_a
-    return distance
