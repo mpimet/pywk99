@@ -9,9 +9,10 @@ import operator
 
 from pywk99.spectrum.background import smooth_spectrum
 from pywk99.significance.statistics import log_distance_statistic
+from pywk99.significance.statistics import coh2_distance_statistic
 
-
-STATISTIC_FUNCTIONS = {"log_distance": log_distance_statistic}
+STATISTIC_FUNCTIONS = {"log_distance" : log_distance_statistic,
+                       "coh2_distance" : coh2_distance_statistic}
 
 def permutation_difference_test(
     spectra_a: list[Union[xr.DataArray, xr.Dataset]],
