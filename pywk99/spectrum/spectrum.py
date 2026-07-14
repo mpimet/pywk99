@@ -205,7 +205,7 @@ def get_window_spectra(
     taper_alpha: Optional[float] = 0.5,
     grid_type: str = "latlon",
     grid_dict: Optional[dict] = None,
-) -> xr.DataArray:
+) -> list[xr.DataArray]:
     spectra = _get_window_spectra(spc_quantity,
                                   variable,
                                   component_type,

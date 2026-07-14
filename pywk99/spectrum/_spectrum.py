@@ -121,7 +121,7 @@ def _get_window_spectra(spc_quantity: str,
                         min_periods_season: Optional[int] = None,
                         taper_alpha: Optional[float] = None,
                         grid_type: str = None,
-                        grid_dict: Optional[dict] = None) -> xr.DataArray:
+                        grid_dict: Optional[dict] = None) -> list[xr.DataArray]:
     # process inputs
     check_for_one_max_two_variables(variable)
     variable = convert_to_dataset(variable)
