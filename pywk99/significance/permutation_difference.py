@@ -1,6 +1,6 @@
 
 import random
-from typing import Callable, Union
+from typing import Union
 
 import numpy as np
 import xarray as xr
@@ -11,8 +11,10 @@ from pywk99.spectrum.background import smooth_spectrum
 from pywk99.significance.statistics import log_distance_statistic
 from pywk99.significance.statistics import coh2_distance_statistic
 
+
 STATISTIC_FUNCTIONS = {"log_distance" : log_distance_statistic,
                        "coh2_distance" : coh2_distance_statistic}
+
 
 def permutation_difference_test(
     spectra_a: list[Union[xr.DataArray, xr.Dataset]],
@@ -20,16 +22,15 @@ def permutation_difference_test(
     statistic: str = "log_distance",
     alpha: float = 0.05,
     resamplings: int = None,
-    all_permutations = False,
+    all_permutations: bool = False,
     smooth_passes: int = 0,
 ) -> xr.Dataset:
-    """Test the significance in the difference between two spectra."""
+    """Test the significance of the difference between two spectra."""
     statistic_function = STATISTIC_FUNCTIONS[statistic]
     if smooth_passes > 0:
         spectra_a = [smooth_spectrum(s, passes=smooth_passes) for s in spectra_a]
         spectra_b = [smooth_spectrum(s, passes=smooth_passes) for s in spectra_b]
     if all_permutations:
-        resamplings = 0
         permutation_diffs = _all_permutations(
             spectra_a, spectra_b, statistic_function
         )
@@ -47,38 +48,38 @@ def permutation_difference_test(
     significant_regions = np.logical_or(mean_diff < ci_lower,
                                         mean_diff > ci_upper)
     significant_regions.name = "significant"
-    bootstrap_results = xr.merge([ci_lower,
-                                  ci_upper,
-                                  mean_diff,
-                                  significant_regions])
-    bootstrap_results.attrs = permutation_diffs.attrs
-    bootstrap_results.attrs["alpha"] = alpha
-    bootstrap_results.attrs["resamplings"] = resamplings
-    bootstrap_results.attrs["spectra_a_windows_num"] = len(spectra_a)
-    bootstrap_results.attrs["spectra_b_windows_num"] = len(spectra_b)
-    return bootstrap_results
+    permutation_results = xr.merge([ci_lower,
+                                    ci_upper,
+                                    mean_diff,
+                                    significant_regions])
+    permutation_results.attrs = permutation_diffs.attrs
+    permutation_results.attrs["alpha"] = alpha
+    permutation_results.attrs["spectra_a_windows_num"] = len(spectra_a)
+    permutation_results.attrs["spectra_b_windows_num"] = len(spectra_b)
+    return permutation_results
 
 
 def _sample_permutation(
     spectra_a, spectra_b, statistic_function, resamplings
 ):
     all_spectra = spectra_a + spectra_b
-    log_distances = []
+    distances = []
     for i in range(resamplings):
         random.shuffle(all_spectra)
         sampled_spectra_a = all_spectra[:len(spectra_a)]
         sampled_spectra_b = all_spectra[len(spectra_a):]
-        log_distance_sampled = statistic_function(
+        distance_sampled = statistic_function(
             sampled_spectra_a, sampled_spectra_b
         )
-        log_distance_sampled = log_distance_sampled.assign_coords(
-            {"bootstrap_iteration": i}
+        distance_sampled = distance_sampled.assign_coords(
+            {"permutation_iteration": i}
         )
-        log_distances.append(log_distance_sampled)
-    bootstrap_distances = xr.concat(log_distances, dim="bootstrap_iteration")
-    bootstrap_distances.attrs = dict(resamplings=i+1,
-                                     method="random")
-    return bootstrap_distances
+        distances.append(distance_sampled)
+    permutation_distances = xr.concat(distances,
+                                      dim="permutation_iteration")
+    permutation_distances.attrs = dict(resamplings=resamplings,
+                                       method="random")
+    return permutation_distances
 
 
 def _all_permutations(
@@ -97,23 +98,23 @@ def _all_permutations(
             sampled_spectra_a, sampled_spectra_b
         )
         distance_sampled = distance_sampled.assign_coords(
-            {"bootstrap_iteration": i}
+            {"permutation_iteration": i}
         )
         distances.append(distance_sampled)
-    bootstrap_distances = xr.concat(distances, dim="bootstrap_iteration")
-    bootstrap_distances.attrs = dict(resamplings=i+1,
+    permutation_distances = xr.concat(distances, dim="permutation_iteration")
+    permutation_distances.attrs = dict(resamplings=i+1,
                                      method="all_permutations")
-    return bootstrap_distances
+    return permutation_distances
 
 
 def _compute_quantiles(permutation_diffs, alpha):
     quantile_lower = alpha / 2
     quantile_upper = 1 - alpha / 2
     ci_lower = permutation_diffs.quantile(
-        quantile_lower, dim="bootstrap_iteration"
+        quantile_lower, dim="permutation_iteration"
     ).drop("quantile")
     ci_upper = permutation_diffs.quantile(
-        quantile_upper, dim="bootstrap_iteration"
+        quantile_upper, dim="permutation_iteration"
     ).drop("quantile")
     ci_lower.name = "lower"
     ci_upper.name = "upper"
