@@ -11,13 +11,15 @@ def log_distance_statistic(spectra_a, spectra_b):
     return log_distance
 
 
-def coh2_distance_statistic(crs_spectra_a, crs_spectra_b):
-    smoothing_passes = 10
+def coh2_distance_statistic(crs_spectra_a,
+                            crs_spectra_b,
+                            smoothing_passes = 0):
     coh2_a = sum(crs_spectra_a) / len(crs_spectra_a)
     coh2_b = sum(crs_spectra_b) / len(crs_spectra_b)
     coh2_a = _coherence_squared(coh2_a)
     coh2_b = _coherence_squared(coh2_b)
-    coh2_a = smooth_spectrum(coh2_a, smoothing_passes)
-    coh2_b = smooth_spectrum(coh2_b, smoothing_passes)
+    if smoothing_passes > 0:
+        coh2_a = smooth_spectrum(coh2_a, passes=smoothing_passes)
+        coh2_b = smooth_spectrum(coh2_b, passes=smoothing_passes)
     distance = coh2_b - coh2_a
     return distance
